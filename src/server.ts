@@ -1,6 +1,10 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
 import { filterImageFromURL, deleteLocalFiles } from "./util/util";
+
+interface FilteredImageQuery {
+  image_url: string;
+}
 
 (async () => {
   // Init the Express application
@@ -13,15 +17,15 @@ import { filterImageFromURL, deleteLocalFiles } from "./util/util";
   app.use(bodyParser.json());
 
   // Endpoint to filter an image from a public url.
-  app.get("/filteredimage", async (req, res) => {
-    const { image_url } = req.query;
+  app.get("/filteredimage", async (req: Request, res: Response) => {
+    const query: FilteredImageQuery = req.query;
 
-    if (!image_url) {
+    if (!query.image_url) {
       return res.status(400).json({ message: "The query argument \"image_url\" is required" });
     }
 
     try {
-      const filteredpath: string = await filterImageFromURL(image_url);
+      const filteredpath: string = await filterImageFromURL(query.image_url);
 
       res.sendFile(filteredpath, (err) => {
         if (err) {
