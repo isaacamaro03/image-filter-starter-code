@@ -27,7 +27,7 @@ interface FilteredImageQuery {
     try {
       const filteredpath: string = await filterImageFromURL(query.image_url);
 
-      res.sendFile(filteredpath, (err) => {
+      res.sendFile(filteredpath, (err: Error) => {
         if (err) {
           res.status(500).json({ message: "Could not send the filtered image" });
         }
@@ -40,7 +40,7 @@ interface FilteredImageQuery {
   
   // Root Endpoint
   // Displays a simple message to the user
-  app.get("/", async (req, res) => {
+  app.get("/", async (req: Request, res: Response) => {
     res.send("try GET /filteredimage?image_url={url}");
   });
 
